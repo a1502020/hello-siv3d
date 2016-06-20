@@ -1,15 +1,15 @@
 ﻿
 # include <Siv3D.hpp>
 #include <list>
-
 #include "Chiritori.h"
 
 void Main()
 {
 	Chiritori me;
-	std::list<Point> trash;
-	int32 trashR = 15;
+	std::list<Circle> trash;
 	Color trashCol = { 200, 200, 200, 255 };
+	int32 score = 0;
+	Font font(20);
 
 	while (System::Update())
 	{
@@ -17,7 +17,8 @@ void Main()
 
 		// ゴミ出現
 		if (RandomBool(1.0 / 60)) {
-			trash.push_back(RandomPoint({ trashR, trashR, Window::Width() - trashR, Window::Height() - trashR }));
+			Point p = RandomPoint({ 15, 15, Window::Width() - 15, Window::Height() - 15 });
+			trash.push_back(Circle(p, 15));
 		}
 
 		// 操作
@@ -37,8 +38,9 @@ void Main()
 
 		// ゴミ回収
 		for (auto it = trash.begin(); it != trash.end(); ) {
-			if (Circle(me.pos, me.r).intersects(Circle(*it, trashR))) {
+			if (Circle(me.pos, me.r).intersects(*it)) {
 				it = trash.erase(it);
+				++score;
 			}
 			else {
 				++it;
@@ -48,9 +50,10 @@ void Main()
 		// 描画
 		Circle(me.pos, me.r).draw(me.color);
 		Circle({ me.pos.x + me.r * 0.6 * angle.x, me.pos.y + me.r * 0.6 * angle.y }, me.r * 0.2).draw({ 255, 255, 255, 255 });
-		for each (Point p in trash)
+		for each (Circle c in trash)
 		{
-			Circle(p, trashR).draw(trashCol);
+			c.draw(trashCol);
 		}
+		font(ToString(score)).draw();
 	}
 }
