@@ -16,7 +16,7 @@ void Main()
 		Vec2 angle(cos(me.angle), sin(me.angle));
 
 		// ゴミ出現
-		if (RandomBool(1.0 / 60)) {
+		if (RandomBool(1.0 / 50)) {
 			Point p = RandomPoint({ 15, 15, Window::Width() - 15, Window::Height() - 15 });
 			trash.push_back(Circle(p, 15));
 		}
@@ -47,7 +47,19 @@ void Main()
 			}
 		}
 
+		// ゴミ増えすぎどっかーん
+		if (trash.size() >= 30) {
+			trash.clear();
+			score = 0;
+			me = Chiritori();
+		}
+
 		// 描画
+		uint32 bk = 0;
+		if (trash.size() > 20) {
+			bk = (trash.size() - 20) * 25;
+		}
+		Graphics::SetBackground({ bk, bk, 0, 255 });
 		Circle(me.pos, me.r).draw(me.color);
 		Circle({ me.pos.x + me.r * 0.6 * angle.x, me.pos.y + me.r * 0.6 * angle.y }, me.r * 0.2).draw({ 255, 255, 255, 255 });
 		for each (Circle c in trash)
