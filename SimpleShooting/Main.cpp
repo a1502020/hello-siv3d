@@ -1,14 +1,21 @@
 ﻿
 # include <Siv3D.hpp>
+#include "OwnChar.h"
 
 void Main()
 {
-	const Font font(30);
+	// 自機 { 初期位置, 半径, 色, 速度 }
+	OwnChar me = { { 320, 240 }, 20,{ 255, 0, 0, 255 }, 6 };
 
 	while (System::Update())
 	{
-		font(L"ようこそ、Siv3D の世界へ！").draw();
+		// 移動
+		if (Input::KeyRight.pressed) me.moveRight();
+		if (Input::KeyUp.pressed) me.moveUp();
+		if (Input::KeyLeft.pressed) me.moveLeft();
+		if (Input::KeyDown.pressed) me.moveDown();
 
-		Circle(Mouse::Pos(), 50).draw({ 255, 0, 0, 127 });
+		// 描画
+		Circle(me.p, me.r).draw(me.col);
 	}
 }
