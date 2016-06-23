@@ -9,12 +9,15 @@ using namespace std;
 void Main()
 {
 	// 自機 { 初期位置, 半径, 色, 速度 }
-	OwnChar me = { { 320, 240 }, 20,{ 255, 0, 0, 255 }, 6 };
+	OwnChar me = { { 320, 400 }, 20,{ 255, 0, 0, 255 }, 6 };
 
 	// 敵 { 初期位置, 半径, 色, 向き, 速度 }
 	list<EnemyChar> enemies;
 
-	while (System::Update())
+	// ゲーム終了フラグ
+	bool finished = false;
+
+	while (System::Update() && !finished)
 	{
 		// 自機移動
 		if (Input::KeyRight.pressed) me.moveRight();
@@ -32,6 +35,13 @@ void Main()
 		enemies.remove_if([&](const EnemyChar &e) {
 			return !Window::ClientRect().intersects(Circle(e.p, e.r));
 		});
+
+		// 敵と自機の当たり判定
+		for (EnemyChar &e : enemies) {
+			if (e.collides(me)) {
+				finished = true;
+			}
+		}
 
 		// 敵出現
 		if (RandomBool(1.0 / 40)) {

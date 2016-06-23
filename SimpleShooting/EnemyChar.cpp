@@ -9,3 +9,7 @@ void EnemyChar::move() {
 void EnemyChar::draw() {
 	Circle(p, r).draw(col);
 }
+
+bool EnemyChar::collides(OwnChar &own) {
+	return Circle(p, r).intersects(Circle(own.p, own.r));
+}

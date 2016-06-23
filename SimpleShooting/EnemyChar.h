@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Siv3D.hpp>
+#include "OwnChar.h"
 
 struct EnemyChar {
 
@@ -40,5 +41,10 @@ struct EnemyChar {
 	/// “G‚ğ•`‰æ‚·‚éB
 	/// </summary>
 	void draw();
+
+	/// <summary>
+	/// ©‹@‚ÆÚG‚µ‚Ä‚¢‚é‚©”»’è‚·‚éB
+	/// </summary>
+	bool collides(OwnChar &own);
 
 };
