@@ -1,15 +1,15 @@
 
 #include "EnemyChar.h"
 
-void EnemyChar::move() {
-	p.x += v * cos(angle);
-	p.y += v * sin(angle);
+void EnemyChar::update() {
+	p.x += v * Cos(angle);
+	p.y += v * Sin(angle);
 }
 
 void EnemyChar::draw() {
 	Circle(p, r).draw(col);
 }
 
-bool EnemyChar::collides(OwnChar &own) {
-	return Circle(p, r).intersects(Circle(own.p, own.r));
+bool EnemyChar::collides(const Circle &c) const {
+	return Circle(p, r).intersects(c);
 }

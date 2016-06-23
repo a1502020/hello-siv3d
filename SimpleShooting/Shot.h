@@ -1,9 +1,8 @@
 #pragma once
 
 #include <Siv3D.hpp>
-#include "OwnChar.h"
 
-struct EnemyChar {
+struct Shot {
 
 	/// <summary>
 	/// ˆÊ’u
@@ -30,7 +29,7 @@ struct EnemyChar {
 	/// </summary>
 	int32 v;
 
-	EnemyChar() = default;
+	Shot() = default;
 
 	/// <summary>
 	/// 1ƒtƒŒ[ƒ€‚Ô‚ñ‚Ìˆ—‚ğs‚¤B
@@ -38,13 +37,8 @@ struct EnemyChar {
 	void update();
 
 	/// <summary>
-	/// “G‚ğ•`‰æ‚·‚éB
+	/// ’e‚ğ•`‰æ‚·‚éB
 	/// </summary>
 	void draw();
-
-	/// <summary>
-	/// ‰~‚ÆÚG‚µ‚Ä‚¢‚é‚©”»’è‚·‚éB
-	/// </summary>
-	bool collides(const Circle &c) const;
 
 };

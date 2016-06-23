@@ -2,6 +2,7 @@
 # include <Siv3D.hpp>
 #include "OwnChar.h"
 #include "EnemyChar.h"
+#include "Shot.h"
 #include <list>
 
 using namespace std;
@@ -10,6 +11,9 @@ void Main()
 {
 	// 自機 { 初期位置, 半径, 色, 速度 }
 	OwnChar me = { { 320, 400 }, 20,{ 255, 0, 0, 255 }, 6 };
+
+	// 自機の弾
+	list<Shot> ownShots;
 
 	// 敵 { 初期位置, 半径, 色, 向き, 速度 }
 	list<EnemyChar> enemies;
@@ -25,10 +29,25 @@ void Main()
 		if (Input::KeyLeft.pressed) me.moveLeft();
 		if (Input::KeyDown.pressed) me.moveDown();
 
+		// 自機の弾発射
+		if ((Input::KeyZ | Input::KeySpace).pressed) {
+			ownShots.push_back({ me.p, 5, {255, 128, 0, 128}, Pi * 1.5, 8 });
+		}
+
+		// 自機の弾移動
+		for (Shot &s : ownShots) {
+			s.update();
+		}
+		
+		// 画面外の弾を削除
+		ownShots.remove_if([&](const Shot &s) {
+			return !Window::ClientRect().intersects(Circle(s.p, s.r));
+		});
+
 		// 敵移動
 		for (EnemyChar &e : enemies)
 		{
-			e.move();
+			e.update();
 		}
 
 		// 画面外の敵を削除
@@ -38,8 +57,21 @@ void Main()
 
 		// 敵と自機の当たり判定
 		for (EnemyChar &e : enemies) {
-			if (e.collides(me)) {
+			if (e.collides(Circle(me.p, me.r))) {
 				finished = true;
+			}
+		}
+
+		// 敵と自機の弾の当たり判定
+		for (auto ite = enemies.begin(); ite != enemies.end();) {
+			auto its = ownShots.begin();
+			while (its != ownShots.end() && !(*ite).collides(Circle((*its).p, (*its).r))) ++its;
+			if (its != ownShots.end()) {
+				ite = enemies.erase(ite);
+				ownShots.erase(its);
+			}
+			else {
+				++ite;
 			}
 		}
 
@@ -58,6 +90,9 @@ void Main()
 		for (EnemyChar &e : enemies)
 		{
 			e.draw();
+		}
+		for (Shot &s : ownShots) {
+			s.draw();
 		}
 	}
 }
