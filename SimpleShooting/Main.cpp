@@ -15,6 +15,10 @@ void Main()
 	// 自機の弾
 	list<Shot> ownShots;
 
+	// 自機の弾の発射間隔
+	const int32 shotInterval = 10;
+	int32 shotIntervalCnt = 0;
+
 	// 敵 { 初期位置, 半径, 色, 向き, 速度 }
 	list<EnemyChar> enemies;
 
@@ -30,8 +34,10 @@ void Main()
 		if (Input::KeyDown.pressed) me.moveDown();
 
 		// 自機の弾発射
-		if ((Input::KeyZ | Input::KeySpace).pressed) {
-			ownShots.push_back({ me.p, 5, {255, 128, 0, 128}, Pi * 1.5, 8 });
+		if (shotIntervalCnt > 0) --shotIntervalCnt;
+		if (shotIntervalCnt == 0 && (Input::KeyZ | Input::KeySpace).pressed) {
+			ownShots.push_back({ me.p, 8, {255, 128, 0, 192}, Pi * 1.5, 8 });
+			shotIntervalCnt = shotInterval;
 		}
 
 		// 自機の弾移動
